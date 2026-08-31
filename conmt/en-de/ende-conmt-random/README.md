@@ -1,5 +1,5 @@
 
-# Model Card for RoEn-CoNMT-MTTransfer
+# Model Card for EnDe-CoNMT-MTTransfer
 
 ## Model Details
 
@@ -22,7 +22,7 @@
 
 ### Direct Use
 
-Translation from Romanian to English in continuous space.
+Translation from English to German in continuous space.
 
 ## Bias, Risks, and Limitations
 While continuous-output models can provide greater output diversity, their overall performance on automatic quality metrics is lower than that of their discrete counterparts. Therefore, the use of continuous-output models is not recommended in applications where high-quality output is a primary requirement.
@@ -65,7 +65,7 @@ Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based o
 
 ### Training Data
 
-WMT 2016 Ro-En https://www.statmt.org/wmt16/
+[WMT 2019 En-De News Translation Task](https://www.statmt.org/wmt19/translation-task.html) 
 
 ### Training Procedure
 
@@ -75,13 +75,7 @@ WMT 2016 Ro-En https://www.statmt.org/wmt16/
 
 **Download additional files**
 
-1. Preprocessing scripts from [Linguistic Input Features Improve Neural Machine Translation](https://aclanthology.org/W16-2209/) (Sennrich & Haddow, WMT 2016):
-
-    [normalise-romanian.py](https://github.com/rsennrich/wmt16-scripts/blob/master/preprocess/normalise-romanian.py)
-
-    [remove-diacritics.py](https://github.com/rsennrich/wmt16-scripts/blob/master/preprocess/remove-diacritics.py)
-
-2. Pre-trained UnigramLM model from [mBART 25](https://huggingface.co/docs/transformers/main/model_doc/mbart) 
+1. Pre-trained UnigramLM model from [mBART 25](https://huggingface.co/docs/transformers/main/model_doc/mbart) 
 
     [sentencepiece.bpe.model](https://huggingface.co/facebook/mbart-large-cc25/blob/e84f32f3b320dcc2ee3d0c0d257c978137d10c25/sentencepiece.bpe.model) 
 
@@ -90,17 +84,15 @@ WMT 2016 Ro-En https://www.statmt.org/wmt16/
 
 
 SPM_ENCODE=sentencepiece/build/src/spm_encode
-SRC="ro"
-TRG="en"
+SRC="en"
+TRG="de"
 
 
 for prefix in train newsdev2016 newstest2016
  do
    cat $prefix.$SRC | \
-   sacremoses -l $SRC normalize |
-   /home/etokarc/local/bin/python3.8 normalise-romanian.py | \
-   /home/etokarc/local/bin/python3.8 remove-diacritics.py | \
-   sacremoses -l $SRC tokenize > data-pp/$prefix.tok.$TRG
+   sacremoses -l $TRG normalize | \
+   sacremoses -l $TRG tokenize > data-pp/$prefix.tok.$TRG
 
    cat $prefix.$TRG | \
    sacremoses -l $TRG normalize | \
@@ -113,7 +105,7 @@ for l in $SRC $TRG
     cat data-pp/train.tok.$l | sacremoses train-truecase -m data-pp/truecase-model.$l
   done
 
-for prefix in train newsdev2016 newstest2016
+for prefix in train newstest2016 newstest2017
   do
     cat data-pp/$prefix.tok.$SRC | sacremoses truecase -m data-pp/truecase-model.$SRC > data-pp/$prefix.tok.tc.$SRC
     cat data-pp/$prefix.tok.$TRG | sacremoses truecase -m data-pp/truecase-model.$TGT > data-pp/$prefix.tok.tc.$TRG
@@ -141,8 +133,8 @@ output_dim: 128
 learned_pos: true
 encoder:
 learned_pos: true
-dropout: 0.3 
-target_embed_path: </path/to/mttransfer/target/embeddings>
+dropout: 0.1 
+target_embed_path: </path/to/random/target/embeddings>
 no_decoder_final_norm: false
 optimizer:
   _name: adam
@@ -168,13 +160,10 @@ checkpoint:
 
 #### Speeds, Sizes, Times 
 ```
-Model size: 73,840,640 trained parameters
-Total training time: 1d 22h 8m 56s
+Model size: trained parameters
+Total training time: 
 System Hardware
-CPU count	16
-Logical CPU count	32
-GPU count	1
-GPU type	GeForce GTX TITAN X
+
 ```
 
 ## Evaluation
@@ -185,7 +174,7 @@ GPU type	GeForce GTX TITAN X
 
 #### Testing Data
 
-WMT 2016 RoEn `newsdev2016` and `newstest2016`
+WMT 2019 EnDe `newstest2016` 
 
 #### Metrics
 
@@ -199,8 +188,8 @@ WMT 2016 RoEn `newsdev2016` and `newstest2016`
 
 |model|BLEU|BERTSc|
 |-----|----|------|
-beam=1 |29.0 | 58.5
-beam=5 |29.0 | 58.0
+beam=1 |31.3 | 66.2
+beam=5 | 29.2 | 62.6
 
 
 
@@ -211,59 +200,21 @@ beam=5 |29.0 | 58.0
 #### Architecture overview
 <img src="../../img/transformers_continuous.png" width="600" height="700"/>
 
-#### MTTransfer
+#### Spherical uniform.
+We draw embeddings uniformly from the surface of the sphere: $\bm{e}(y_i) \sim \operatorname{Unif}(\mathbb{S}_{m})$. Since standard normal vectors are distributed with rotational symmetry around the origin, uniform samples on the sphere can be obtained by normalizing standard normal random vectors: 
 
-MTTransfer is a novel knowledge transfer strategy that leverages the structure learned by a standard discrete-output model. Concretely, we first train a discrete Transformer model (serving as a baseline) on the preprocessed parallel MT data and select the best-performing checkpoint based on development set performance. We then reuse the learned output layer weights of this model as target embeddings for the CoNMT system.
+$$\bm{e}(y_i) = \bm{u}_i / \|\bm{u}_i\|; \quad \bm{u}_i \sim \operatorname{Normal}(\bm{0}, \bm{I}_d).$$ 
 
-```python
-import argparse
+The same argument works if the normal distribution has spherical covariance $\sigma \bm{I}_d$ for any $\sigma$, and thus, since the cosine loss is norm-invariant, uniform initialization is exactly equivalent to the standard initialization of transformer embeddings.
 
-import torch
-
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model-path")
-    parser.add_argument("--dictionary")
-    parser.add_argument("--output")
-
-    args = parser.parse_args()
-
-    model = torch.load(args.model_path)
-    print(model.keys())
-
-    embed = model["model"]["decoder.embed_tokens.weight"]
-
-    print(embed.shape)
-    # save embedding matrix alone
-    torch.save(embed, f'{args.output}.pt')
-
-    # possibly save memory
-    n_words = embed.shape[0]
-
-    
-    special_tokens = ["<s>", "<pad>", "</s>", "<unk>"]
-
-    dictionary = {v: i for i, v in enumerate(special_tokens)}
-
-    with open(args.dictionary, 'r', encoding="utf-8") as d:
-        lines = d.readlines()
-        for line in lines:
-            token, field = line.rstrip().rsplit(" ", 1)
-            if token in special_tokens:
-                continue
-            dictionary[token] = len(dictionary)
-
-    # cdgm_textgen reuires this format as an input for pre-trained embeddings
-    with open(f"{args.output}.txt", "w") as out:
-        out.write("{} {}".format(embed.shape[0], embed.shape[1]))
-        out.write("\n")
-
-        for tok, ind in dictionary.items():
-            vals = " ".join([str(x) for x in embed[ind, :].cpu().data.numpy()])
-            out.write(f"{tok} {vals}\n")
-
-```
+#### Hypercube.
+The corners of the hypercube $\{-1, 1\}^d$ all have norm $\sqrt{d}$ and thus form a discrete subset of a hypersphere. This motivates us to consider drawing embeddings from a scaled Rademacher distribution:
+$$
+\bm{e}(y_i) = \bm{r}_i /\sqrt{d};
+\quad
+\bm{r}_i \sim \operatorname{Rademacher}(d).
+$$
+Each coordinate of $\mathbf{r}_i$ has 50\% probability of being $+1$ and 50\% of being $-1$. With this strategy, any two distinct embeddings have cosine distance at least \(2/d\). Moreover, hypercubic embeddings can be stored as bit patterns and potentially allow for faster loss calculation with dedicated low-level implementations which we do not explore here.
 
 #### Cosine loss:
 

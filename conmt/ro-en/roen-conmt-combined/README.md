@@ -97,10 +97,10 @@ TRG="en"
 for prefix in train newsdev2016 newstest2016
  do
    cat $prefix.$SRC | \
-   $MOSES/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
+   sacremoses -l $SRC normalize |
    /home/etokarc/local/bin/python3.8 normalise-romanian.py | \
    /home/etokarc/local/bin/python3.8 remove-diacritics.py | \
-   $MOSES/scripts/tokenizer/tokenizer.perl -a -l $SRC > data-pp/$prefix.tok.$SRC
+   sacremoses -l $SRC tokenize > data-pp/$prefix.tok.$TRG
 
    cat $prefix.$TRG | \
    sacremoses -l $TRG normalize | \
