@@ -12,7 +12,7 @@
 - **Language(s) (NLP):** ro, en
 - **License:**: MIT
 
-### Model Sources [optional]
+### Model Sources
 
 - **Repository:** https://github.com/afeena/cdgm_textgen
 - **Paper:** [The Unreasonable Effectiveness of Random Target Embeddings for Continuous-Output Neural Machine Translation](https://aclanthology.org/2024.naacl-short.56/) (Tokarchuk & Niculae, NAACL 2024)
@@ -22,7 +22,7 @@
 
 ### Direct Use
 
-Translation from Romanian to English in continuous space.
+Translation from Romanian to English in continuous space for news domain.
 
 ## Bias, Risks, and Limitations
 While continuous-output models can provide greater output diversity, their overall performance on automatic quality metrics is lower than that of their discrete counterparts. Therefore, the use of continuous-output models is not recommended in applications where high-quality output is a primary requirement.

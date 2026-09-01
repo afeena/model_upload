@@ -12,7 +12,7 @@
 - **Language(s) (NLP):** ro, en
 - **License:**: MIT
 
-### Model Sources [optional]
+### Model Sources
 
 - **Repository:** https://github.com/afeena/cdgm_textgen
 - **Paper:** [The Unreasonable Effectiveness of Random Target Embeddings for Continuous-Output Neural Machine Translation](https://aclanthology.org/2024.naacl-short.56/) (Tokarchuk & Niculae, NAACL 2024)
@@ -22,7 +22,7 @@
 
 ### Direct Use
 
-Translation from English to German in continuous space.
+Translation from English to German in continuous space for news domain.
 
 ## Bias, Risks, and Limitations
 While continuous-output models can provide greater output diversity, their overall performance on automatic quality metrics is lower than that of their discrete counterparts. Therefore, the use of continuous-output models is not recommended in applications where high-quality output is a primary requirement.
@@ -50,15 +50,15 @@ Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based o
 3. Translate test data with CLI:
     ```
     #run decoding with decode.py from cdgm_textgen lib
-    python decode.py </path/to/data> --beam 1 --task translation --source-lang ro --target-lang en --print-step  --decoding-measure cosine  --path checkpoint_best.pt --input </path/to/testfile> > hyp.txt
+    python decode.py </path/to/data> --beam 1 --task translation --source-lang en --target-lang de --print-step  --decoding-measure cosine  --path checkpoint_best.pt --input </path/to/testfile> > hyp.txt
 
     #extract and postprocess hypothesis
-    cat hyp.txt | grep -P "^H" | sort -V | cut -f3- | ~/develop/sentencepiece/build/src/spm_decode --model=mbart.cc25.v2/sentence.bpe.model  | sed 's/▁//g' | sacremoses -l en detokenize | sacremoses -l en detruecase > hyp_eval_ready.txt
+    cat hyp.txt | grep -P "^H" | sort -V | cut -f3- | ~/develop/sentencepiece/build/src/spm_decode --model=mbart.cc25.v2/sentence.bpe.model  | sed 's/▁//g' | sacremoses -l de detokenize | sacremoses -l de detruecase > hyp_eval_ready.txt
 
     #score hypothesis
-    cat hyp_eval_ready.txt | sacrebleu <data/ro-en/newsdev2016.en>
+    cat hyp_eval_ready.txt | sacrebleu <data/en-de/newstest2016.en>
 
-    bert-score -r <data/ro-en/newsdev2016.en> -c hyp_eval_ready.txt --lang en --rescale_with_baseline 
+    bert-score -r <data/ro-en/newsdev2016.en> -c hyp_eval_ready.txt --lang de --rescale_with_baseline 
     ```
 
 ## Training Details
