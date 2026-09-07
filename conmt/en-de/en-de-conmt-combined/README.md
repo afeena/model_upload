@@ -1,5 +1,5 @@
 
-# Model Card for EnDe-CoNMT-MTTransfer
+# Model Card for EnDe-CoNMT-Combined
 
 ## Model Details
 
@@ -9,7 +9,7 @@
 - **Funded by:** This work was partly supported by the Dutch Research Council (NWO) via VI.Veni.212.228 and the European Union’s Horizon Europe research and innovation programme via UTTER 101070631.
 - **Shared by:** Evgeniia Tokarchuk
 - **Model type:** Machine Translation
-- **Language(s) (NLP):** ro, en
+- **Language(s) (NLP):** English (`en`), German (`de`) 
 - **License:**: MIT
 
 ### Model Sources
@@ -31,14 +31,9 @@ Target embeddings are not trainable to prevent model collapse.
 
 ## How to Get Started with the Model
 
-Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
+The code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
 
 1. Download and preprocess data as described in [preprocessing](#preprocessing)
-<!-- 2. Extract target embeddings
-   
-   ``` 
-   python extract_target_embeddings.py --model-path roen-contmt-mttransfer.pt --dictionary data/ro-en/dict.en.txt --output mttransfer_output_emb.txt
-   ``` -->
 
 2. Download library with `git`
 
@@ -120,10 +115,17 @@ for prefix in train newsdev2016 newstest2016
 
 #### Training Hyperparameters
 
-```
+```yaml
 task:
-_name: translation
-data: </path/to/data>
+  _name: translation
+  data: </path/to/data>
+  source_lang: en
+  target_lang: de
+  eval_bleu: true
+  eval_bleu_args: '{"beam":1}'
+  eval_bleu_detok: moses
+  eval_bleu_remove_bpe: sentencepiece
+  eval_bleu_print_samples: false
 criterion:
 _name: cosine_ar_criterion
 model:
@@ -160,10 +162,8 @@ checkpoint:
 
 #### Speeds, Sizes, Times 
 ```
-Model size: trained parameters
-Total training time: 
-System Hardware
-
+Model size: 122,480,640
+Training time: 266623.5 seconds
 ```
 
 ## Evaluation
