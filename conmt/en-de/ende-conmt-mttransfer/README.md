@@ -154,10 +154,8 @@ checkpoint:
 
 #### Speeds, Sizes, Times 
 ```
-Model size: trained parameters
-Total training time: 
-System Hardware
-
+Model size: 122,432,000
+Total training time: 64884.6 seconds
 ```
 
 ## Evaluation
