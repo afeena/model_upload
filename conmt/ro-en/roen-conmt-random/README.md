@@ -31,7 +31,7 @@ Target embeddings are not trainable to prevent model collapse.
 
 ## How to Get Started with the Model
 
-Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
+The code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
 
 1. Download and preprocess data as described in [preprocessing](#preprocessing)
 <!-- 2. Extract target embeddings
@@ -85,7 +85,7 @@ WMT 2016 Ro-En https://www.statmt.org/wmt16/
 
     [sentencepiece.bpe.model](https://huggingface.co/facebook/mbart-large-cc25/blob/e84f32f3b320dcc2ee3d0c0d257c978137d10c25/sentencepiece.bpe.model) 
 
-```
+```bash
 #!/bin/bash
 
 
@@ -128,7 +128,7 @@ for prefix in train newsdev2016 newstest2016
 
 #### Training Hyperparameters
 
-```
+```yaml
 task:
 _name: translation
 data: </path/to/data>
