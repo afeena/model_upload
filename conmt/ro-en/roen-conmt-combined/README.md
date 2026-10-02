@@ -9,7 +9,7 @@
 - **Funded by:** This work was partly supported by the Dutch Research Council (NWO) via VI.Veni.212.228 and the European Union’s Horizon Europe research and innovation programme via UTTER 101070631.
 - **Shared by:** Evgeniia Tokarchuk
 - **Model type:** Machine Translation
-- **Language(s) (NLP):** ro, en
+- **Language(s) (NLP):** Romanian(`ro`), English(`en`)
 - **License:**: MIT
 
 ### Model Sources
@@ -34,21 +34,16 @@ Target embeddings are not trainable to prevent model collapse.
 Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
 
 1. Download and preprocess data as described in [preprocessing](#preprocessing)
-<!-- 2. Extract target embeddings
-   
-   ``` 
-   python extract_target_embeddings.py --model-path roen-contmt-mttransfer.pt --dictionary data/ro-en/dict.en.txt --output mttransfer_output_emb.txt
-   ``` -->
+2. 
+3. Download library with `git`
 
-2. Download library with `git`
-
-    ```
+    ```bash
     git clone https://github.com/afeena/cdgm_textgen
     cd cdgm_textgen
     ```
 
-3. Translate test data with CLI:
-    ```
+4. Translate test data with CLI:
+    ```bash
     #run decoding with decode.py from cdgm_textgen lib
     python decode.py </path/to/data> --beam 1 --task translation --source-lang ro --target-lang en --print-step  --decoding-measure cosine  --path roen-conmt-random.pt --input </path/to/testfile> > hyp.txt
 
@@ -85,7 +80,7 @@ WMT 2016 Ro-En https://www.statmt.org/wmt16/
 
     [sentencepiece.bpe.model](https://huggingface.co/facebook/mbart-large-cc25/blob/e84f32f3b320dcc2ee3d0c0d257c978137d10c25/sentencepiece.bpe.model) 
 
-```
+```bash
 #!/bin/bash
 
 
@@ -128,7 +123,7 @@ for prefix in train newsdev2016 newstest2016
 
 #### Training Hyperparameters
 
-```
+```yaml
 task:
 _name: translation
 data: </path/to/data>
@@ -199,8 +194,7 @@ WMT 2016 RoEn `newsdev2016` and `newstest2016`
 
 |model|BLEU|BERTSc|
 |-----|----|------|
-random uniform |28.8 | 58.8
-random cube|28.7 | 58.8
+conmt-combined |29.6 | 60.4
 
 
 
