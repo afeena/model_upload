@@ -1,4 +1,3 @@
-
 # Model Card for EnDe-CoNMT-Random
 
 ## Model Details
