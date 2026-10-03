@@ -9,7 +9,7 @@
 - **Funded by:** This work was partly supported by the Dutch Research Council (NWO) via VI.Veni.212.228 and the European Union’s Horizon Europe research and innovation programme via UTTER 101070631.
 - **Shared by:** Evgeniia Tokarchuk
 - **Model type:** Machine Translation
-- **Language(s) (NLP):** ro, en
+- **Language(s) (NLP):** Romanian(`ro`), English(`en`)
 - **License:**: MIT
 
 ### Model Sources
