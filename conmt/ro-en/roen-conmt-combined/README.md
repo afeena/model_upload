@@ -45,7 +45,7 @@ Th code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based o
 4. Translate test data with CLI:
     ```bash
     #run decoding with decode.py from cdgm_textgen lib
-    python decode.py </path/to/data> --beam 1 --task translation --source-lang ro --target-lang en --print-step  --decoding-measure cosine  --path roen-conmt-random.pt --input </path/to/testfile> > hyp.txt
+    python decode.py </path/to/data> --beam 1 --task translation --source-lang ro --target-lang en --print-step  --decoding-measure cosine  --path roen-conmt-combined.pt --input </path/to/testfile> > hyp.txt
 
     #extract and postprocess hypothesis
     cat hyp.txt | grep -P "^H" | sort -V | cut -f3- | ~/develop/sentencepiece/build/src/spm_decode --model=mbart.cc25.v2/sentence.bpe.model  | sed 's/▁//g' | sacremoses -l en detokenize | sacremoses -l en detruecase > hyp_eval_ready.txt
