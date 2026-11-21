@@ -34,11 +34,6 @@ Target embeddings are not trainable to prevent model collapse.
 The code source [cdgm_textgen](https://github.com/afeena/cdgm_textgen) is based on [fairseq](https://github.com/facebookresearch/fairseq) framework (depricated as of March 2026).
 
 1. Download and preprocess data as described in [preprocessing](#preprocessing)
-<!-- 2. Extract target embeddings
-   
-   ``` 
-   python extract_target_embeddings.py --model-path roen-contmt-mttransfer.pt --dictionary data/ro-en/dict.en.txt --output mttransfer_output_emb.txt
-   ``` -->
 
 2. Download library with `git`
 

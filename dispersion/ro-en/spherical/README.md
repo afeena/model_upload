@@ -136,7 +136,7 @@ task:
   eval_bleu_remove_bpe: sentencepiece
   eval_bleu_print_samples: false
 criterion:
-  _name: label_smoothed_cross_entropy
+  _name: ls_ce_dispersed
   label_smoothing: 0.1
 model:
   _name: riemannian_emb_transformer

@@ -136,10 +136,10 @@ task:
   eval_bleu_remove_bpe: sentencepiece
   eval_bleu_print_samples: false
 criterion:
-  _name: ls_cross_entropy_kernel_disp
+  _name: ls_ce_mmd_disp
   label_smoothing: 0.1
   cosine_gamma: 0.01
-  kernel_sample_size: 1000
+  batch_size: 1000
   dispersed_weight: 10.0
 model:
   _name: riemannian_emb_transformer

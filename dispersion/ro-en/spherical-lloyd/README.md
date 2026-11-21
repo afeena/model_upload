@@ -136,7 +136,7 @@ task:
   eval_bleu_remove_bpe: sentencepiece
   eval_bleu_print_samples: false
 criterion:
-  _name: ls_cross_entropy_lloyd_disp
+  _name: ls_ce_lloyd_disp
   n_lloyd_samples: 100
   label_smoothing: 0.1
   dispersed_weight: 10.0

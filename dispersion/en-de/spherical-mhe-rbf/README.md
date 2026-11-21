@@ -129,12 +129,11 @@ task:
   eval_bleu_print_samples: false
   eval_bleu_args: '{"beam":1}'
 criterion:
-  _name: ls_cross_entropy_kernel_disp
-  cosine_gamma: 0.01
-  kernel_sample_size: 2048
-  dispersed_weight: 10
+  _name: ls_ce_mmd_disp
   label_smoothing: 0.1
-  report_dispersed: false
+  dispersed_weight: 10.0
+  cosine_gamma: 0.01
+  batch_size: 1000
 model:
   _name: riemannian_emb_transformer
   decoder:

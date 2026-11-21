@@ -128,8 +128,9 @@ task:
   eval_bleu_print_samples: false
   eval_bleu_args: '{"beam":1}'
 criterion:
-  _name: label_smoothed_cross_entropy
+  _name: ls_ce_dispersed
   label_smoothing: 0.1
+  dispersed_weight: 1.0
 model:
   _name: riemannian_emb_transformer
   decoder:

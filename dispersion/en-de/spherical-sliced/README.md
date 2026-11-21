@@ -129,7 +129,7 @@ task:
   eval_bleu_print_samples: false
   eval_bleu_args: '{"beam":1}'
 criterion:
-  _name: ls_cross_entropy_sliced_disp
+  _name: ls_ce_sliced_disp
   label_smoothing: 0.1
   dispersed_weight: 10.0
   report_dispersed: false
