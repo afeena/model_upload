@@ -27,20 +27,20 @@ English-to-German translation in the news domain. The model is intended for rese
 
 ### Bias, Risks, and Limitations
 
-The training data consists of news and may reproduce biases or errors present in that data. Quality may degrade outside the news domain, on dialectal or specialized text, or for language varieties underrepresented in the corpus. Automatic scores do not establish factuality, fairness, or suitability for high-stakes use; translations should be reviewed by a qualified speaker when errors could cause harm.
+Translations may reflect biases or errors in the news training data. Quality may degrade outside the news domain, on dialectal or specialized text, or for language varieties underrepresented in the corpus. Automatic scores do not establish factuality, fairness, or suitability for high-stakes use. Have a qualified speaker review translations when errors could cause harm.
 
 ## How to Get Started with the Model
 
-The checkpoint uses the `fairseq` preprocessing and SentencePiece setup described in the paper. After preparing compatible binarized data, run:
+Prepare compatible binarized data using the Fairseq and SentencePiece setup described in the paper.
 
-2. Download library with `git`
+1. Clone `cdgm_textgen`.
 
     ```bash
     git clone https://github.com/afeena/cdgm_textgen
     cd cdgm_textgen
     ```
 
-3. Translate test data with CLI:
+2. Translate the test data with the CLI.
     ```bash
     #run decoding with decode.py from cdgm_textgen lib
     python decode.py </path/to/data> --beam 1 --task translation --source-lang en --target-lang de --print-step  --decoding-measure cosine  --path checkpoint_best.pt --input </path/to/testfile> > hyp.txt
@@ -61,13 +61,13 @@ The checkpoint uses the `fairseq` preprocessing and SentencePiece setup describe
 
 [WMT 2019 English-German News Translation Task](https://www.statmt.org/wmt19/translation-task.html), containing approximately 9.1 million training sentence pairs including back-translated data.
 
-#### Preprocessing 
+#### Preprocessing
 
 **Install libraries**: [mosesdecoder](https://github.com/moses-smt/mosesdecoder), [sentencepiece](https://github.com/google/sentencepiece)
 
 **Download additional files**
 
-1. Pre-trained UnigramLM model from [mBART 25](https://huggingface.co/docs/transformers/main/model_doc/mbart) 
+1. Download the pretrained SentencePiece unigram model from [mBART 25](https://huggingface.co/docs/transformers/main/model_doc/mbart).
 
     [sentencepiece.bpe.model](https://huggingface.co/facebook/mbart-large-cc25/blob/e84f32f3b320dcc2ee3d0c0d257c978137d10c25/sentencepiece.bpe.model) 
 
@@ -115,6 +115,8 @@ for prefix in train newsdev2016 newstest2016
 The system uses a standard Transformer objective with cross-entropy loss and label smoothing of 0.1. Decoder embeddings are tied between the input and output layers. All non-manifold parameters use Adam with learning rate $5\times10^{-4}$; the spherical embedding parameter uses Riemannian Adam with learning rate $5\times10^{-3}$. Training uses a 10,000-step warmup, an effective batch size of approximately 65,500 tokens, and 50,000 updates. Subword tokenization uses the SentencePiece model from mBART-25.
 
 #### Training config
+
+The example uses `ls_ce_mmd_disp` with `batch_size: 1000`, the sample count reported in the paper. The archived run used `ls_cross_entropy_kernel_disp` with `kernel_sample_size: 2048`. Set `batch_size: 2048` to match the archived sample count.
 
 ```yaml
 # @package _group_
